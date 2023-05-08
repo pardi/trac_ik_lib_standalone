@@ -32,10 +32,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <trac_ik/trac_ik.hpp>
 #include <boost/date_time.hpp>
 #include <Eigen/Geometry>
-#include <ros/ros.h>
 #include <limits>
 #include <kdl_parser/kdl_parser.hpp>
-#include <urdf/model.h>
+#include <urdf_model/model.h>
 
 namespace TRAC_IK
 {
@@ -49,7 +48,7 @@ TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, cons
 
   ros::NodeHandle node_handle("~");
 
-  urdf::Model robot_model;
+  urdf::ModelInterface robot_model;
   std::string xml_string;
 
   std::string urdf_xml, full_urdf_xml;
@@ -70,11 +69,16 @@ TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, cons
 
   KDL::Tree tree;
 
-  if (!kdl_parser::treeFromUrdfModel(robot_model, tree))
-    ROS_FATAL("Failed to extract kdl tree from xml robot description");
+  if (!kdl_parser::treeFromUrdfModel(robot_model, tree)){
+    std::cerr << "Failed to extract kdl tree from xml robot description" << std::endl;
+    // TODO: FATAL, does it need to do anything?
+  }
+    
 
-  if (!tree.getChain(base_link, tip_link, chain))
-    ROS_FATAL("Couldn't find chain %s to %s", base_link.c_str(), tip_link.c_str());
+  if (!tree.getChain(base_link, tip_link, chain)){
+      std::cerr << "Couldn't find chain " << base_link.c_str() << " to " << tip_link.c_str() << std::endl;
+    // TODO: FATAL, does it need to do anything?
+  }
 
   std::vector<KDL::Segment> chain_segs = chain.segments;
 
@@ -122,7 +126,8 @@ TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, cons
         lb(joint_num - 1) = std::numeric_limits<float>::lowest();
         ub(joint_num - 1) = std::numeric_limits<float>::max();
       }
-      ROS_DEBUG_STREAM_NAMED("trac_ik", "IK Using joint " << joint->name << " " << lb(joint_num - 1) << " " << ub(joint_num - 1));
+      std::cout << "IK Using joint " << joint->name << " " << lb(joint_num - 1) << " " << ub(joint_num - 1) << std::endl;
+      // ROS_DEBUG_STREAM_NAMED("trac_ik", "IK Using joint " << joint->name << " " << lb(joint_num - 1) << " " << ub(joint_num - 1));
     }
   }
 
@@ -417,7 +422,7 @@ int TRAC_IK::CartToJnt(const KDL::JntArray &q_init, const KDL::Frame &p_in, KDL:
 
   if (!initialized)
   {
-    ROS_ERROR("TRAC-IK was not properly initialized with a valid chain or limits.  IK cannot proceed");
+    std::cerr << "TRAC-IK was not properly initialized with a valid chain or limits.  IK cannot proceed" << std::endl;
     return -1;
   }
 
