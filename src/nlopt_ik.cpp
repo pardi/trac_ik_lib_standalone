@@ -64,7 +64,7 @@ double minfuncDQ(const std::vector<double>& x, std::vector<double>& grad, void* 
 
   std::vector<double> vals(x);
 
-  double jump = boost::math::tools::epsilon<float>();
+  double jump = std::numeric_limits<float>::epsilon();
   double result[1];
   c->cartDQError(vals, result);
 
@@ -98,7 +98,7 @@ double minfuncSumSquared(const std::vector<double>& x, std::vector<double>& grad
 
   std::vector<double> vals(x);
 
-  double jump = boost::math::tools::epsilon<float>();
+  double jump = std::numeric_limits<float>::epsilon();
   double result[1];
   c->cartSumSquaredError(vals, result);
 
@@ -132,7 +132,7 @@ double minfuncL2(const std::vector<double>& x, std::vector<double>& grad, void* 
 
   std::vector<double> vals(x);
 
-  double jump = boost::math::tools::epsilon<float>();
+  double jump = std::numeric_limits<float>::epsilon();
   double result[1];
   c->cartL2NormError(vals, result);
 
@@ -171,7 +171,7 @@ void constrainfuncm(uint m, double* result, uint n, const double* x, double* gra
     vals[i] = x[i];
   }
 
-  double jump = boost::math::tools::epsilon<float>();
+  double jump = std::numeric_limits<float>::epsilon();
 
   c->cartSumSquaredError(vals, result);
 
@@ -234,7 +234,7 @@ NLOPT_IK::NLOPT_IK(const KDL::Chain& _chain, const KDL::JntArray& _q_min, const 
 
   assert(types.size() == lb.size());
 
-  std::vector<double> tolerance(1, boost::math::tools::epsilon<float>());
+  std::vector<double> tolerance(1,  std::numeric_limits<float>::epsilon());
   opt.set_xtol_abs(tolerance[0]);
 
 
