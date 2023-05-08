@@ -12,7 +12,7 @@ The original implementation of Trac-IK is tightly linked with the ROS (Robotic O
 This repo adapts the current trac_ik_lib package to become a standlone library stripping down dependencies with ROS.
 
 # TODO
-- [ ] Tag the first version of the standalone library
+- [x] Tag the first version of the standalone library
 - [ ] Set up testing with different robots
 - [ ] Improve error-handling
 
