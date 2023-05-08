@@ -1,5 +1,6 @@
 /********************************************************************************
 Copyright (c) 2015, TRACLabs, Inc.
+Copyright (c) 2023, Tommaso Pardi
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
