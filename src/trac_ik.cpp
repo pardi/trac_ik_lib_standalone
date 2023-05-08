@@ -35,49 +35,48 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <limits>
 #include <kdl_parser/kdl_parser.hpp>
 #include <urdf_model/model.h>
+#include <urdf_parser/urdf_parser.h>
 
 namespace TRAC_IK
 {
 
-TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, const std::string& URDF_param, double _maxtime, double _eps, SolveType _type) :
+TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, const std::string& URDF_path, double _maxtime, double _eps, SolveType _type) :
   initialized(false),
   eps(_eps),
   maxtime(_maxtime),
   solvetype(_type)
 {
 
-  ros::NodeHandle node_handle("~");
+  // READ URDF from path
+	std::ifstream urdf_file(URDF_path); //taking file as inputstream
+	std::string urdf_str;
 
-  urdf::ModelInterface robot_model;
-  std::string xml_string;
+	urdf::ModelInterfaceSharedPtr robot_model; 
 
-  std::string urdf_xml, full_urdf_xml;
-  node_handle.param("urdf_xml", urdf_xml, URDF_param);
-  node_handle.searchParam(urdf_xml, full_urdf_xml);
+	if(urdf_file) {
+		std::ostringstream ss;
 
-  ROS_DEBUG_NAMED("trac_ik", "Reading xml file from parameter server");
-  if (!node_handle.getParam(full_urdf_xml, xml_string))
-  {
-    ROS_FATAL_NAMED("trac_ik", "Could not load the xml from parameter server: %s", urdf_xml.c_str());
-    return;
-  }
+		ss << urdf_file.rdbuf(); 
 
-  node_handle.param(full_urdf_xml, xml_string, std::string());
-  robot_model.initString(xml_string);
+		urdf_str = ss.str();
 
-  ROS_DEBUG_STREAM_NAMED("trac_ik", "Reading joints and links from URDF");
+		robot_model = urdf::parseURDF(urdf_str);
+	}
+	else{
+		std::cerr << "The URDF file does not exist!!!" << std::endl;
+	}
+
+  std::cout << "Reading joints and links from URDF" << std::endl;
 
   KDL::Tree tree;
 
-  if (!kdl_parser::treeFromUrdfModel(robot_model, tree)){
+  if (!kdl_parser::treeFromUrdfModel(*robot_model, tree)){
     std::cerr << "Failed to extract kdl tree from xml robot description" << std::endl;
-    // TODO: FATAL, does it need to do anything?
   }
     
 
   if (!tree.getChain(base_link, tip_link, chain)){
       std::cerr << "Couldn't find chain " << base_link.c_str() << " to " << tip_link.c_str() << std::endl;
-    // TODO: FATAL, does it need to do anything?
   }
 
   std::vector<KDL::Segment> chain_segs = chain.segments;
@@ -92,7 +91,7 @@ TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, cons
   uint joint_num = 0;
   for (unsigned int i = 0; i < chain_segs.size(); ++i)
   {
-    joint = robot_model.getJoint(chain_segs[i].getJoint().getName());
+    joint = robot_model->getJoint(chain_segs[i].getJoint().getName());
     if (joint->type != urdf::Joint::UNKNOWN && joint->type != urdf::Joint::FIXED)
     {
       joint_num++;
@@ -126,8 +125,8 @@ TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, cons
         lb(joint_num - 1) = std::numeric_limits<float>::lowest();
         ub(joint_num - 1) = std::numeric_limits<float>::max();
       }
+
       std::cout << "IK Using joint " << joint->name << " " << lb(joint_num - 1) << " " << ub(joint_num - 1) << std::endl;
-      // ROS_DEBUG_STREAM_NAMED("trac_ik", "IK Using joint " << joint->name << " " << lb(joint_num - 1) << " " << ub(joint_num - 1));
     }
   }
 
