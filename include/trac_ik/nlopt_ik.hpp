@@ -1,5 +1,6 @@
 /********************************************************************************
 Copyright (c) 2015, TRACLabs, Inc.
+Copyright (c) 2023, Tommaso Pardi
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +33,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #define NLOPT_IK_HPP
 
 #include <trac_ik/kdl_tl.hpp>
-#include <nlopt.h>
+#include <nlopt.hpp>
 
 
 namespace NLOPT_IK
