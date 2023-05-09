@@ -15,7 +15,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag trac_ik:$(date +%s)
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: false
+        tags: trac_ik:latest
       
     - name: Build package inside Docker container
       uses: docker://trac_ik:latest
