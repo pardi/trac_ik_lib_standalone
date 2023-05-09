@@ -38,8 +38,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <urdf_model/model.h>
 #include <urdf_parser/urdf_parser.h>
 
-namespace TRAC_IK
-{
+using namespace trac_ik;
 
 TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, const std::string& URDF_path, double _maxtime, double _eps, SolveType _type) :
   initialized(false),
@@ -154,7 +153,7 @@ void TRAC_IK::initialize()
   assert(chain.getNrOfJoints() == ub.data.size());
 
   jacsolver.reset(new KDL::ChainJntToJacSolver(chain));
-  nl_solver.reset(new NLOPT_IK::NLOPT_IK(chain, lb, ub, maxtime, eps, NLOPT_IK::SumSq));
+  nl_solver.reset(new trac_ik::NLOPT_IK(chain, lb, ub, maxtime, eps, trac_ik::SumSq));
   iksolver.reset(new KDL::ChainIkSolverPos_TL(chain, lb, ub, maxtime, eps, true, true));
 
   for (uint i = 0; i < chain.segments.size(); i++)
@@ -473,4 +472,4 @@ TRAC_IK::~TRAC_IK()
   if (task2.joinable())
     task2.join();
 }
-}
+

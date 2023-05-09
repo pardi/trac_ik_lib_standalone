@@ -37,8 +37,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-namespace NLOPT_IK
-{
+using namespace trac_ik;
 
 dual_quaternion targetDQ;
 
@@ -629,4 +628,3 @@ int NLOPT_IK::CartToJnt(const KDL::JntArray &q_init, const KDL::Frame &p_in, KDL
 }
 
 
-}
