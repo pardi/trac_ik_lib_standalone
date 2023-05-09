@@ -35,7 +35,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <kdl/chainfksolverpos_recursive.hpp>
 #include <kdl/chainiksolvervel_pinv.hpp>
 
-namespace TRAC_IK
+namespace trac_ik
 {
 class TRAC_IK;
 }
@@ -47,7 +47,7 @@ enum BasicJointType { RotJoint, TransJoint, Continuous };
 
 class ChainIkSolverPos_TL
 {
-  friend class TRAC_IK::TRAC_IK;
+  friend class trac_ik::TRAC_IK;
 
 public:
   ChainIkSolverPos_TL(const Chain& chain, const JntArray& q_min, const JntArray& q_max, double maxtime = 0.005, double eps = 1e-3, bool random_restart = false, bool try_jl_wrap = false);

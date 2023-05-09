@@ -36,7 +36,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nlopt.hpp>
 
 
-namespace NLOPT_IK
+namespace trac_ik
 {
 
 enum OptType { Joint, DualQuat, SumSq, L2 };
@@ -44,7 +44,7 @@ enum OptType { Joint, DualQuat, SumSq, L2 };
 
 class NLOPT_IK
 {
-  friend class TRAC_IK::TRAC_IK;
+  friend class trac_ik::TRAC_IK;
 public:
   NLOPT_IK(const KDL::Chain& chain, const KDL::JntArray& q_min, const KDL::JntArray& q_max, double maxtime = 0.005, double eps = 1e-3, OptType type = SumSq);
 

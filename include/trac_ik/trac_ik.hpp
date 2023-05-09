@@ -40,7 +40,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 #include <boost/date_time.hpp>
 
-namespace TRAC_IK
+namespace trac_ik
 {
 
 enum SolveType { Speed, Distance, Manip1, Manip2 };
@@ -84,7 +84,7 @@ public:
   {
     lb = lb_;
     ub = ub_;
-    nl_solver.reset(new NLOPT_IK::NLOPT_IK(chain, lb, ub, maxtime, eps, NLOPT_IK::SumSq));
+    nl_solver.reset(new trac_ik::NLOPT_IK(chain, lb, ub, maxtime, eps, trac_ik::SumSq));
     iksolver.reset(new KDL::ChainIkSolverPos_TL(chain, lb, ub, maxtime, eps, true, true));
     return true;
   }
@@ -116,7 +116,7 @@ private:
   double maxtime;
   SolveType solvetype;
 
-  std::unique_ptr<NLOPT_IK::NLOPT_IK> nl_solver;
+  std::unique_ptr<trac_ik::NLOPT_IK> nl_solver;
   std::unique_ptr<KDL::ChainIkSolverPos_TL> iksolver;
 
   boost::posix_time::ptime start_time;
