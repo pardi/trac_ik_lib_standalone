@@ -20,4 +20,4 @@ jobs:
     
     # Build the package inside the Docker container
     - name: Build package inside Docker container
-      run: docker run -v $(pwd):/src -w /src/build trac_ik:latest cmake .. && make
+      run: docker run -v $(pwd):/src -w /src/build trac_ik:latest bash -c "cmake .. && make"
