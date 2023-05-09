@@ -7,26 +7,34 @@ endif()
 
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel.")
 
+set(LIB_NAME 
+  trac_ik)
+
 find_package(Boost REQUIRED COMPONENTS date_time)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(pkg_nlopt REQUIRED nlopt)
 pkg_check_modules(Eigen REQUIRED eigen3)
 
+add_library(${LIB_NAME} STATIC
+  src/kdl_tl.cpp
+  src/nlopt_ik.cpp
+  src/trac_ik.cpp)
 
-include_directories(
+target_include_directories(${LIB_NAME} PUBLIC
   include
   ${Eigen_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${pkg_nlopt_INCLUDE_DIRS}
 )
 
-add_library(trac_ik
-  src/kdl_tl.cpp
-  src/nlopt_ik.cpp
-  src/trac_ik.cpp)
-
-target_link_libraries(trac_ik
+target_link_libraries(${LIB_NAME} PRIVATE
   ${pkg_nlopt_LIBRARIES}
   ${Boost_LIBRARIES})
 
+  # Install target
+install(TARGETS ${LIB_NAME}
+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(DIRECTORY include/ DESTINATION include)
