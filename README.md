@@ -31,6 +31,7 @@ mkdir -p kdl_parser/kdl_parser/build && cd setup_dep/kdl_parser/kdl_parser/build
 git clone https://github.com/pardi/trac_ik_lib_standalone.git
 mkdir -p trac_ik_lib_standalone/build
 make -DCMAKE_BUILD_TYPE=[Debug | Release]
+sudo make install
 ```
 
 # TODO
