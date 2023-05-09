@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+![build](https://github.com/pardi/trac_ik_lib_standalone/actions/workflows/docker-image.yml/badge.svg?event=push)
+
 # TRAC-IK-Lib a standalone implementation
 
 Trac-IK is an Inverse Kinematics library developed by [TracLabs](https://traclabs.com/). It is based on KDL library and implements a faster alternative Inverse Kinematics solver to the popular inverse Jacobian methods in KDL. Two algorithms are proposed:
