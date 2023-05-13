@@ -627,4 +627,3 @@ int NLOPT_IK::CartToJnt(const KDL::JntArray &q_init, const KDL::Frame &p_in, KDL
 
 }
 
-
