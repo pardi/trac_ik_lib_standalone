@@ -239,17 +239,17 @@ NLOPT_IK::NLOPT_IK(const KDL::Chain& _chain, const KDL::JntArray& _q_min, const 
 
   switch (TYPE)
   {
-  case Joint:
+  case OptType::Joint:
     opt.set_min_objective(minfunc, this);
     opt.add_equality_mconstraint(constrainfuncm, this, tolerance);
     break;
-  case DualQuat:
+  case OptType::DualQuat:
     opt.set_min_objective(minfuncDQ, this);
     break;
-  case SumSq:
+  case OptType::SumSq:
     opt.set_min_objective(minfuncSumSquared, this);
     break;
-  case L2:
+  case OptType::L2:
     opt.set_min_objective(minfuncL2, this);
     break;
   }
@@ -481,7 +481,7 @@ int NLOPT_IK::CartToJnt(const KDL::JntArray &q_init, const KDL::Frame &p_in, KDL
 
   targetPose = p_in;
 
-  if (TYPE == 1)   // DQ
+  if (TYPE == OptType::DualQuat)   // DQ
   {
     math3d::matrix3x3<double> targetRotationMatrix(targetPose.M.data);
     math3d::quaternion<double> targetQuaternion = math3d::rot_matrix_to_quaternion<double>(targetRotationMatrix);

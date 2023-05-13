@@ -153,7 +153,7 @@ void TRAC_IK::initialize()
   assert(chain.getNrOfJoints() == ub.data.size());
 
   jacsolver.reset(new KDL::ChainJntToJacSolver(chain));
-  nl_solver.reset(new trac_ik::NLOPT_IK(chain, lb, ub, maxtime, eps, trac_ik::SumSq));
+  nl_solver.reset(new trac_ik::NLOPT_IK(chain, lb, ub, maxtime, eps, trac_ik::OptType::SumSq));
   iksolver.reset(new KDL::ChainIkSolverPos_TL(chain, lb, ub, maxtime, eps, true, true));
 
   for (uint i = 0; i < chain.segments.size(); i++)
@@ -255,8 +255,8 @@ bool TRAC_IK::runSolver(T1& solver, T2& other_solver,
     {
       switch (solvetype)
       {
-      case Manip1:
-      case Manip2:
+      case SolveType::Manip1:
+      case SolveType::Manip2:
         normalize_limits(q_init, q_out);
         break;
       default:
@@ -273,11 +273,11 @@ bool TRAC_IK::runSolver(T1& solver, T2& other_solver,
         double err, penalty;
         switch (solvetype)
         {
-        case Manip1:
+        case SolveType::Manip1:
           penalty = manipPenalty(q_out);
           err = penalty * TRAC_IK::ManipValue1(q_out);
           break;
-        case Manip2:
+        case SolveType::Manip2:
           penalty = manipPenalty(q_out);
           err = penalty * TRAC_IK::ManipValue2(q_out);
           break;
@@ -291,7 +291,7 @@ bool TRAC_IK::runSolver(T1& solver, T2& other_solver,
       mtx_.unlock();
     }
 
-    if (!solutions.empty() && solvetype == Speed)
+    if (!solutions.empty() && solvetype == SolveType::Speed)
       break;
 
     for (unsigned int j = 0; j < seed.data.size(); j++)
@@ -450,8 +450,8 @@ int TRAC_IK::CartToJnt(const KDL::JntArray &q_init, const KDL::Frame &p_in, KDL:
 
   switch (solvetype)
   {
-  case Manip1:
-  case Manip2:
+  case SolveType::Manip1:
+  case SolveType::Manip2:
     std::sort(errors.rbegin(), errors.rend()); // rbegin/rend to sort by max
     break;
   default:

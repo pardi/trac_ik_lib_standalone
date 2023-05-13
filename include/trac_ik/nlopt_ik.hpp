@@ -39,14 +39,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace trac_ik
 {
 
-enum OptType { Joint, DualQuat, SumSq, L2 };
+enum class OptType { Joint, DualQuat, SumSq, L2 };
 
 
 class NLOPT_IK
 {
   friend class trac_ik::TRAC_IK;
 public:
-  NLOPT_IK(const KDL::Chain& chain, const KDL::JntArray& q_min, const KDL::JntArray& q_max, double maxtime = 0.005, double eps = 1e-3, OptType type = SumSq);
+  NLOPT_IK(const KDL::Chain& chain, const KDL::JntArray& q_min, const KDL::JntArray& q_max, double maxtime = 0.005, double eps = 1e-3, OptType type = OptType::SumSq);
 
   ~NLOPT_IK() {};
   int CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out, const KDL::Twist bounds = KDL::Twist::Zero(), const KDL::JntArray& q_desired = KDL::JntArray());

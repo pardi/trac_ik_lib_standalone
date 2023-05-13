@@ -43,7 +43,7 @@ class TRAC_IK;
 namespace KDL
 {
 
-enum BasicJointType { RotJoint, TransJoint, Continuous };
+enum class BasicJointType { RotJoint, TransJoint, Continuous };
 
 class ChainIkSolverPos_TL
 {

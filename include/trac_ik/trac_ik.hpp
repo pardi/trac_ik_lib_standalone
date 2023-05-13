@@ -43,14 +43,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace trac_ik
 {
 
-enum SolveType { Speed, Distance, Manip1, Manip2 };
+enum class SolveType { Speed, Distance, Manip1, Manip2 };
 
 class TRAC_IK
 {
 public:
-  TRAC_IK(const KDL::Chain& _chain, const KDL::JntArray& _q_min, const KDL::JntArray& _q_max, double _maxtime = 0.005, double _eps = 1e-5, SolveType _type = Speed);
+  TRAC_IK(const KDL::Chain& _chain, const KDL::JntArray& _q_min, const KDL::JntArray& _q_max, double _maxtime = 0.005, double _eps = 1e-5, SolveType _type = SolveType::Speed);
 
-  TRAC_IK(const std::string& base_link, const std::string& tip_link, const std::string& URDF_path, double _maxtime = 0.005, double _eps = 1e-5, SolveType _type = Speed);
+  TRAC_IK(const std::string& base_link, const std::string& tip_link, const std::string& URDF_path, double _maxtime = 0.005, double _eps = 1e-5, SolveType _type = SolveType::Speed);
 
   ~TRAC_IK();
 
@@ -84,7 +84,7 @@ public:
   {
     lb = lb_;
     ub = ub_;
-    nl_solver.reset(new trac_ik::NLOPT_IK(chain, lb, ub, maxtime, eps, trac_ik::SumSq));
+    nl_solver.reset(new trac_ik::NLOPT_IK(chain, lb, ub, maxtime, eps, OptType::SumSq));
     iksolver.reset(new KDL::ChainIkSolverPos_TL(chain, lb, ub, maxtime, eps, true, true));
     return true;
   }
