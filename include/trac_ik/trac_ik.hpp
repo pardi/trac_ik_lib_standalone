@@ -119,8 +119,8 @@ private:
   SolveType solve_type_;
 
   std::unique_ptr<KDL::ChainJntToJacSolver> jacsolverUPtr_{nullptr};
-  std::unique_ptr<trac_ik::NLOPT_IK> nl_solverUPtr_;
-  std::unique_ptr<KDL::ChainIkSolverPos_TL> iksolverUPtr_;
+  std::unique_ptr<trac_ik::NLOPT_IK> nl_solverUPtr_{nullptr};
+  std::unique_ptr<KDL::ChainIkSolverPos_TL> iksolverUPtr_{nullptr};
 
   boost::posix_time::ptime start_time_;
 
