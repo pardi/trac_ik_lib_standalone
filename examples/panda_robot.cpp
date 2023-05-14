@@ -4,6 +4,8 @@
 #include <urdf_parser/urdf_parser.h>
 #include <kdl/chainfksolver.hpp>
 #include <random>
+#include <iostream>
+#include <fstream>
 
 using namespace trac_ik;
 
@@ -50,7 +52,7 @@ auto getChain(auto& chain, const std::string& URDF_path, const std::string& base
     }
     else{
         std::cerr << "The URDF file does not exist!!!" << std::endl;
-        return 0;
+        return -1;
     }
 
     std::cout << "Reading joints and links from URDF" << std::endl;
@@ -59,7 +61,7 @@ auto getChain(auto& chain, const std::string& URDF_path, const std::string& base
 
     if (!kdl_parser::treeFromUrdfModel(*robot_model, tree)){
         std::cerr << "Failed to extract kdl tree from urdf" << std::endl;
-        return 0;
+        return -1;
     }
 
     if (!tree.getChain(base_link, tip_link, chain)){
@@ -75,20 +77,22 @@ int main(){
 
     const std::string base_link = "panda_link0";
     const std::string tip_link = "panda_link8"; 
-    const std::string URDF_path = "../../urdf/panda.urdf";
+    const std::string URDF_path = "../urdf/panda.urdf";
     double maxtime = 0.05;
     double eps = 1e-4;
     SolveType solve_type = SolveType::Speed;
 
     std::cout << "Instantiating the Trac_IK and FK algorithms" << std::endl;
     KDL::Chain chain;
-    getChain(chain, URDF_path, base_link, tip_link);    
+    if (getChain(chain, URDF_path, base_link, tip_link)){
+        return -1;
+    }
 
     trac_ik::TRAC_IK ik_solver(base_link, tip_link, URDF_path, maxtime, eps, solve_type);
 
     std::cout << "--------TESTS--------" << std::endl;
 
-    constexpr auto max_iters = 100;
+    constexpr auto max_iters = 1000;
     constexpr auto joint_num = 7;
     constexpr auto tollerance = 1e-3;
     KDL::Twist tolerances;
@@ -149,8 +153,17 @@ int main(){
     }
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "Success: " << ik_successes << "/" << max_iters << "(" << static_cast<double>(ik_successes/max_iters * 100.0) << "%)" << std::endl;
+    std::cout << "Success: " << ik_successes << "/" << max_iters << "(" << static_cast<double>(ik_successes)/max_iters * 100.0 << "%)" << std::endl;
     std::cout << "Total time: " << elapsed_seconds.count() << "s | Average time per call: " << static_cast<double>(elapsed_seconds.count() / max_iters) << std::endl;
+ 
+    // Write to file the results
+    std::ofstream test_save_file;
+    test_save_file.open("test_data.txt");
+    test_save_file << "[Panda Robot]" << std::endl;
+    test_save_file << "Success: " << ik_successes << "/" << max_iters << "(" << static_cast<double>(ik_successes)/max_iters * 100.0 << "%)" << std::endl;
+    test_save_file << "Total time: " << elapsed_seconds.count() << "s | Average time per call: " << static_cast<double>(elapsed_seconds.count() / max_iters) << std::endl;
+    test_save_file.close();
+
 
     return 0;
 }
