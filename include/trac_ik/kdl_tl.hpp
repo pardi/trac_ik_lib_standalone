@@ -43,57 +43,56 @@ class TRAC_IK;
 namespace KDL
 {
 
-enum BasicJointType { RotJoint, TransJoint, Continuous };
+enum class BasicJointType { RotJoint, TransJoint, Continuous };
 
 class ChainIkSolverPos_TL
 {
   friend class trac_ik::TRAC_IK;
 
 public:
-  ChainIkSolverPos_TL(const Chain& chain, const JntArray& q_min, const JntArray& q_max, double maxtime = 0.005, double eps = 1e-3, bool random_restart = false, bool try_jl_wrap = false);
+  ChainIkSolverPos_TL(const Chain& chain, const JntArray& q_min, const JntArray& q_max, double max_time = 0.005, double eps = 1e-3, bool random_restart = false, bool try_jl_wrap = false);
 
-  ~ChainIkSolverPos_TL();
+  ~ChainIkSolverPos_TL() = default;
 
-  int CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out, const KDL::Twist bounds = KDL::Twist::Zero());
+  int CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out, const KDL::Twist& bounds = KDL::Twist::Zero());
 
   inline void setMaxtime(double t)
   {
-    maxtime = t;
+    max_time_ = t;
   }
 
 private:
-  const Chain chain;
-  JntArray q_min;
-  JntArray q_max;
+  Chain chain_;
+  JntArray q_min_;
+  JntArray q_max_;
 
-  KDL::Twist bounds;
+  KDL::Twist bounds_;
 
-  KDL::ChainIkSolverVel_pinv vik_solver;
-  KDL::ChainFkSolverPos_recursive fksolver;
-  JntArray delta_q;
-  double maxtime;
+  KDL::ChainIkSolverVel_pinv vik_solver_;
+  KDL::ChainFkSolverPos_recursive fksolver_;
+  JntArray delta_q_;
+  double max_time_;
 
-  double eps;
+  double eps_;
 
-  bool rr;
-  bool wrap;
+  bool rr_;
+  bool wrap_;
+  bool aborted_;
 
-  std::vector<KDL::BasicJointType> types;
+  Frame f_;
+  Twist delta_twist_;
+
+  std::vector<KDL::BasicJointType> joint_types_;
 
   inline void abort()
   {
-    aborted = true;
+    aborted_ = true;
   }
 
   inline void reset()
   {
-    aborted = false;
+    aborted_ = false;
   }
-
-  bool aborted;
-
-  Frame f;
-  Twist delta_twist;
 
   inline static double fRand(double min, double max)
   {

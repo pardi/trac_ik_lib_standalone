@@ -39,82 +39,84 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace trac_ik
 {
 
-enum OptType { Joint, DualQuat, SumSq, L2 };
+enum class OptType { Joint, DualQuat, SumSq, L2 };
 
 
 class NLOPT_IK
 {
   friend class trac_ik::TRAC_IK;
-public:
-  NLOPT_IK(const KDL::Chain& chain, const KDL::JntArray& q_min, const KDL::JntArray& q_max, double maxtime = 0.005, double eps = 1e-3, OptType type = SumSq);
+  
+  public:
+  
+  NLOPT_IK(const KDL::Chain& chain, const KDL::JntArray& q_min, const KDL::JntArray& q_max, double max_time = 0.005, double eps = 1e-3, OptType type = OptType::SumSq);
 
   ~NLOPT_IK() {};
   int CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out, const KDL::Twist bounds = KDL::Twist::Zero(), const KDL::JntArray& q_desired = KDL::JntArray());
 
   double minJoints(const std::vector<double>& x, std::vector<double>& grad);
+  
   //  void cartFourPointError(const std::vector<double>& x, double error[]);
+
   void cartSumSquaredError(const std::vector<double>& x, double error[]);
   void cartDQError(const std::vector<double>& x, double error[]);
   void cartL2NormError(const std::vector<double>& x, double error[]);
 
   inline void setMaxtime(double t)
   {
-    maxtime = t;
+    max_time_ = t;
   }
 
-private:
+  private:
+
+  // Private member variable
+
+  const KDL::Chain chain_;
+  std::vector<double> l_bounds_;
+  std::vector<double> u_bounds_;
+
+  std::vector<double> des_;
+  KDL::ChainFkSolverPos_recursive fksolver_;
+
+  double max_time_;
+  double eps_;
+  int iter_counter_;
+  OptType opt_type_;
+
+  KDL::Frame target_pose_;
+  KDL::Frame current_pose_;
+  KDL::Frame z_up_;
+  KDL::Frame x_out_;
+  KDL::Frame y_out_;
+  KDL::Frame z_target_;
+  KDL::Frame x_target_;
+  KDL::Frame y_target_;
+
+  std::vector<KDL::BasicJointType> joint_types_;
+
+  nlopt::opt opt_;
+
+  std::vector<double> best_x_;
+  
+  int progress_;
+  bool aborted_{false};
+
+  KDL::Twist bounds_;
 
   inline void abort()
   {
-    aborted = true;
+    aborted_ = true;
   }
 
   inline void reset()
   {
-    aborted = false;
+    aborted_ = false;
   }
-
-
-  std::vector<double> lb;
-  std::vector<double> ub;
-
-  const KDL::Chain chain;
-  std::vector<double> des;
-
-
-  KDL::ChainFkSolverPos_recursive fksolver;
-
-  double maxtime;
-  double eps;
-  int iter_counter;
-  OptType TYPE;
-
-  KDL::Frame targetPose;
-  KDL::Frame z_up ;
-  KDL::Frame x_out;
-  KDL::Frame y_out;
-  KDL::Frame z_target;
-  KDL::Frame x_target;
-  KDL::Frame y_target;
-
-  std::vector<KDL::BasicJointType> types;
-
-  nlopt::opt opt;
-
-  KDL::Frame currentPose;
-
-  std::vector<double> best_x;
-  int progress;
-  bool aborted;
-
-  KDL::Twist bounds;
 
   inline static double fRand(double min, double max)
   {
     double f = (double)rand() / RAND_MAX;
     return min + f * (max - min);
   }
-
 
 };
 
