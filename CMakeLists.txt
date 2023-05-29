@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(trac_ik_lib)
 
-# if(CMAKE_COMPILER_IS_GNUCXX OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
-#     set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-# endif()
+# Set C++17 as the C++ version 
 set(CMAKE_CXX_FLAGS "-std=c++17 ${CMAKE_CXX_FLAGS}")
+
+add_compile_options(-Wall -Wextra -fPIC)
 
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel.")
 
