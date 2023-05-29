@@ -36,6 +36,12 @@ mkdir -p trac_ik_lib_standalone/build
 make -DCMAKE_BUILD_TYPE=[Debug | Release]
 sudo make install
 ```
+# Tested on
+| OS  | Version  | Tested |
+|---|---|---|
+| Ubuntu  | 22.04 | :white_check_mark: |
+| MAC (M1)  | Monterey  | :white_check_mark: |
+
 
 # TODO
 - [x] Tag the first version of the standalone library
