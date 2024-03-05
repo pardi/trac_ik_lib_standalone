@@ -25,7 +25,7 @@ liburdfdom-dev liburdfdom-headers-dev libconsole-bridge-dev git
 Install [kdl_parser library](https://github.com/pardi/kdl_parser.git) as follow:
 ```
 git clone https://github.com/pardi/kdl_parser.git
-mkdir -p kdl_parser/kdl_parser/build && cd setup_dep/kdl_parser/kdl_parser/build && cmake .. && make && make install
+mkdir -p kdl_parser/kdl_parser/build && cd kdl_parser/kdl_parser/build && cmake .. && make && make install
 ```
 **N.B.** The above library is a fork of the original `kdl_parser` that fixes an installation issue when ROS is not involved.
 
@@ -33,6 +33,7 @@ mkdir -p kdl_parser/kdl_parser/build && cd setup_dep/kdl_parser/kdl_parser/build
 ```
 git clone https://github.com/pardi/trac_ik_lib_standalone.git
 mkdir -p trac_ik_lib_standalone/build
+cmake ..
 make -DCMAKE_BUILD_TYPE=[Debug | Release]
 sudo make install
 ```
